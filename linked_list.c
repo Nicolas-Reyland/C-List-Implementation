@@ -6,8 +6,8 @@
 // error message
 void _exit_msg(const char* msg)
 {
-	fprintf(stderr, msg);
-	fprintf(stderr, "\n");
+	fprintf(stderr, "%s", msg);
+	fprintf(stderr, "%s", "\n");
 	exit(EXIT_FAILURE);
 }
 
@@ -33,8 +33,8 @@ bool _valid_index(LinkedList *list, int index)
 void _assert_index(LinkedList *list, int index)
 {
 	if (_valid_index(list, index)) return;
-	char* msg = LL_INDEX_ERROR_MSG;
-	sprintf(msg, index, list->length);
+	char msg[255];
+	sprintf(msg, LL_INDEX_ERROR_MSG, index, list->length);
 	_exit_msg(msg);
 }
 
@@ -49,8 +49,8 @@ Node* _get_node_at(LinkedList *list, int index)
 		// verify after we get the next node: the head should have been verified in the _assert_index call
 		if (node == NULL)
 		{
-			char* msg = LL_NULL_POINTER_NODE;
-			sprintf(msg, i);
+			char msg[255];
+			sprintf(msg, LL_NULL_POINTER_NODE, i);
 			_exit_msg(msg);
 		}
 	}
@@ -67,8 +67,8 @@ Node* _new_node()
 	// if the pointer is NULL, the allocation faled
 	if (node == NULL)
 	{
-		char* msg = LL_MEM_ALLOC_ERROR_MSG;
-		sprintf(msg, node_size);
+		char msg[255];
+		sprintf(msg, LL_MEM_ALLOC_ERROR_MSG, node_size);
 		_exit_msg(msg);
 	}
 	return node;
@@ -106,7 +106,7 @@ void insert_value_at(LinkedList *list, int index, void* value)
 	// append after head
 	else
 	{
-		int new_index = index - 1;;
+		int new_index = index - 1;
 		_assert_index(list, new_index);
 		// get nodes
 		Node* prev_node = _get_node_at(list, new_index);

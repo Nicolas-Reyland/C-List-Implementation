@@ -4,7 +4,7 @@
 
 /* Constants */
 #define LL_INDEX_ERROR_MSG "linked_list:IndexError: %d out of bounds with linked list of length %d"
-#define LL_MEM_ALLOC_ERROR_MSG "linked_list:AllocationError: Could not allocate memory of size: %d"
+#define LL_MEM_ALLOC_ERROR_MSG "linked_list:AllocationError: Could not allocate memory of size: %lu"
 #define LL_ACESS_EMPTY_LIST "linked_list:Tried to access an empty linked list"
 #define LL_NULL_POINTER_NODE "linked_list:Node at index: %d the list is NULL"
 
