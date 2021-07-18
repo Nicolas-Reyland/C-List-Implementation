@@ -4,18 +4,6 @@
 #include <errno.h>
 #include <string.h>
 
-/* YOU NEED TO typedef THE LINKED_LIST_TYPE YOU WANT TO USE FOR THIS StaticList
- * Example:
-
- * typedef char LINKED_LIST_TYPE; // typedef the LINKED_LIST_TYPE you want to use (here char, but could any type (even structs/unions/etc.))
- * #include "LinkedList.h" // include the LinkedList.h header
-
- * Now, you can use LinkedLists using type char.
- * To be able to use multiple data_types (one data_type per LinkedList),
- * please use the generate_linked_list_headers.py
- *
- */
-
 #define typename(x) _Generic((x),		/* Get the name of a type */					\
 																						\
 			_Bool: 0,				  unsigned char: 1,				\
@@ -31,7 +19,7 @@
 
 /* The Node is an element of a LinkedList */
 struct Node {
-	LINKED_LIST_TYPE value;
+	void* value;
 	struct Node *next;
 };
 
@@ -74,16 +62,16 @@ struct Node* _newNode() {
 }
 
 /* intialize a LinkedList (set num_elements, size & head) with a value */
-void initListAtValue(LinkedList *list, LINKED_LIST_TYPE value) {
+void initListAtValue(LinkedList *list, void* value) {
 	list->num_elements = 1;
-	list->size = sizeof(LINKED_LIST_TYPE);
+	list->size = sizeof(void*);
 	list->head = _newNode(); // so it can be freed ('free(node)') like al the rest
 	list->head->value = value;
 	list->head->next = NULL;
 }
 
 /* Returns the value of the nth element of the LinkedList */
-LINKED_LIST_TYPE getValueAtIndex(LinkedList *list, int index) {
+void* getValueAtIndex(LinkedList *list, int index) {
 	// check if index in valid
 	_checkIndex(list, index);
 	// get the nth Node of the list
@@ -93,7 +81,7 @@ LINKED_LIST_TYPE getValueAtIndex(LinkedList *list, int index) {
 }
 
 /* insert a value at index 'index' in the LinkedList */
-void insertValueAtIndex(LinkedList *list, LINKED_LIST_TYPE value, int index) {
+void insertValueAtIndex(LinkedList *list, void* value, int index) {
 	// check if the index is valid
 	_checkIndex(list, index);
 	// create a new node with value 'value'
@@ -130,7 +118,7 @@ void insertValueAtIndex(LinkedList *list, LINKED_LIST_TYPE value, int index) {
 }
 
 /* Removes the Node at index 'index'. Returns it's value */
-LINKED_LIST_TYPE removeValueAtIndex(LinkedList *list, int index) {
+void* removeValueAtIndex(LinkedList *list, int index) {
 	// check if index is valid (extra line bc first testing with index + 1)
 	_checkIndex(list, index + 1); if (index == -1) {_checkIndex(list, -1);}
 	// declare current node (the one to be removed)
@@ -154,7 +142,7 @@ LINKED_LIST_TYPE removeValueAtIndex(LinkedList *list, int index) {
 	}
 
 	// extract value of current (removed node)
-	LINKED_LIST_TYPE value = current->value;
+	void* value = current->value;
 	// free the memory of removed node
 	free(current);
 	// decrement num_elements
@@ -163,7 +151,7 @@ LINKED_LIST_TYPE removeValueAtIndex(LinkedList *list, int index) {
 	return value;
 }
 
-void addValueAtEnd(LinkedList *list, LINKED_LIST_TYPE value) {
+void addValueAtEnd(LinkedList *list, void* value) {
 	// get last node of the Linked list
 	struct Node *last = _getNodeAtIndex(list, list->num_elements - 1);
 	// create new node with value 'value' and pointing to NULL (end of list)
@@ -205,8 +193,8 @@ void printLinkedList(LinkedList *list) {
 		return;
 	}
 
-	// declare a varaible with type LINKED_LIST_TYPE
-	LINKED_LIST_TYPE elem;
+	// declare a varaible with type void*
+	void* elem;
 
 	// get the type name
 	int type_ = typename(elem);
