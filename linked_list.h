@@ -37,10 +37,10 @@ void _exit_msg(const char* msg);
 void _init_list(LinkedList *list, void* value);
 
 // is an index valid ?
-bool _valid_index(LinkedList *list, int index, bool include_end);
+bool _valid_index(LinkedList *list, int index);
 
 // assert that an index is valid
-void _assert_index(LinkedList *list, int index, bool include_end);
+void _assert_index(LinkedList *list, int index);
 
 // get the node at the index
 Node* _get_node_at(LinkedList *list, int index);
@@ -55,7 +55,7 @@ Node* _new_node();
 void* get_value_at(LinkedList *list, int index);
 
 // insert value at index
-void insert_value_at(LinkedList *list, void* value, int index);
+void insert_value_at(LinkedList *list, int index, void* value);
 
 // remove value at index
 void* remove_value_at(LinkedList *list, int index);

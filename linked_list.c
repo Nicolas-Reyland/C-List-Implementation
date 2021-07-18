@@ -20,18 +20,19 @@ void _init_list(LinkedList *list, void* value)
 	list->head->value = value;
 	list->head->next = NULL;
 	list->_initialized = true;
+	printf("List initialized\n");
 }
 
 // is an index valid ?
-bool _valid_index(LinkedList *list, int index, bool include_end)
+bool _valid_index(LinkedList *list, int index)
 {
-	return 0 <= index && index < list->length + include_end;
+	return 0 <= index && index < list->length;
 }
 
 // assert that an index is valid
-void _assert_index(LinkedList *list, int index, bool include_end)
+void _assert_index(LinkedList *list, int index)
 {
-	if (_valid_index(list, index, include_end)) return;
+	if (_valid_index(list, index)) return;
 	char* msg = LL_INDEX_ERROR_MSG;
 	sprintf(msg, index, list->length);
 	_exit_msg(msg);
@@ -79,30 +80,52 @@ Node* _new_node()
 // get value at index
 void* get_value_at(LinkedList *list, int index)
 {
-	_assert_index(list, index, false);
+	_assert_index(list, index);
 	return _get_node_at(list, index)->value;
 }
 
 // insert value at index
-void insert_value_at(LinkedList *list, void* value, int index)
+void insert_value_at(LinkedList *list, int index, void* value)
 {
 	// init list ?
 	if (index == 0)
 	{
+		// init list ?
 		if (!list->_initialized)
 		{
 			_init_list(list, value);
 			return;
 		}
-		// ...
+
+		// insert at head
+		Node* new_head = _new_node();
+		new_head->value = value;
+		new_head->next = list->head;
+		list->head = new_head;
 	}
-	_assert_index(list, index, true);
+	// append after head
+	else
+	{
+		int new_index = index - 1;;
+		_assert_index(list, new_index);
+		// get nodes
+		Node* prev_node = _get_node_at(list, new_index);
+		Node* after_node = prev_node->next;
+		Node* new_node = _new_node();
+		new_node->value = value;
+		// set connections
+		prev_node->next = new_node;
+		new_node->next = after_node;
+	}
+
+	// increment list length
+	list->length++;
 }
 
 // remove value at index
 void* remove_value_at(LinkedList *list, int index)
 {
-	_assert_index(list, index, false);
+	_assert_index(list, index);
 }
 
 // remove value
@@ -135,6 +158,7 @@ void append_value(LinkedList *list, void* value)
 		tail->next->value = value;
 	}
 
+	// increment list length
 	list->length++;
 }
 
