@@ -1,67 +1,78 @@
-/* LinkedList Declaration */
+/* linked_list Declaration */
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 /* Constants */
 #define LL_INDEX_ERROR_MSG "linked_list:IndexError: %d out of bounds with linked list of length %d"
 #define LL_MEM_ALLOC_ERROR_MSG "linked_list:AllocationError: Could not allocate memory of size: %lu"
 #define LL_ACESS_EMPTY_LIST "linked_list:Tried to access an empty linked list"
-#define LL_NULL_POINTER_NODE "linked_list:Node at index: %d the list is NULL"
+#define LL_NULL_POINTER_NODE "linked_list:node at index: %d the list is NULL"
 
 
 /* Structures */
 
-// Node structure
-typedef struct Node
+// node structure
+typedef struct node node;
+struct node
 {
 	void* value;
-	struct Node *next;
-} Node;
+	struct node *next;
+};
 
 // Linked List structure
-typedef struct LinkedList
+typedef struct linked_list linked_list;
+// (https://stackoverflow.com/questions/17052443/c-function-inside-struct)
+
+struct linked_list
 {
+	// attributes
 	int length;
 	size_t value_size;
-	Node *head;
-	bool _initialized;
-} LinkedList;
+	node *head;
 
+	// methods
+	void* (*get_value_at)(linked_list*, int index);
+	void (*insert_value_at)(linked_list*, int index, void* value);
+	void (*append_value)(linked_list*, void*);
+	void* (*remove_value_at)(linked_list*, int index);
+	int (*remove_value)(linked_list*, void* value);
+};
+
+/* Init function */
+linked_list init_linked_list();
 
 /* 'Private' Methods */
 
 // error message
-void _exit_msg(const char* msg);
-
-// initialize the list
-void _init_list(LinkedList *list, void* value);
+void _linked_list_exit_msg(const char* msg);
 
 // is an index valid ?
-bool _valid_index(LinkedList *list, int index);
+bool _linked_list_valid_index(linked_list *list, int index);
 
 // assert that an index is valid
-void _assert_index(LinkedList *list, int index);
+void _linked_list_assert_index(linked_list *list, int index);
 
 // get the node at the index
-Node* _get_node_at(LinkedList *list, int index);
+node* _linked_list_get_node_at(linked_list *list, int index);
 
 // create a new node
-Node* _new_node();
+node* _linked_list_new_node();
 
 
 /* 'Public' Methods */
 
 // get value at index
-void* get_value_at(LinkedList *list, int index);
+void* linked_list_get_value_at(linked_list *list, int index);
 
 // insert value at index
-void insert_value_at(LinkedList *list, int index, void* value);
-
-// remove value at index
-void* remove_value_at(LinkedList *list, int index);
-
-// remove value
-int remove_value(LinkedList *list, void* value);
+void linked_list_insert_value_at(linked_list *list, int index, void* value);
 
 // append value
-void append_value(LinkedList *list, void* value);
+void linked_list_append_value(linked_list *list, void* value);
+
+// remove value at index
+void* linked_list_remove_value_at(linked_list *list, int index);
+
+// remove value
+int linked_list_remove_value(linked_list *list, void* value);

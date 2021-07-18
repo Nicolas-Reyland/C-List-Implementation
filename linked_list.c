@@ -1,47 +1,54 @@
-/* LinkedList Implementation */
+/* linked_list Implementation */
 #include "linked_list.h"
 #include <stdio.h>
 #include <errno.h>
 
+// init function
+linked_list init_linked_list()
+{
+	linked_list list;
+	// setup attributes
+	list.length = 0;
+	list.value_size = sizeof(void*);
+	list.head = NULL;
+	// attach methods
+	list.get_value_at = &linked_list_get_value_at;
+	list.insert_value_at = &linked_list_insert_value_at;
+	list.append_value = &linked_list_append_value;
+	list.remove_value = &linked_list_remove_value;
+	list.remove_value_at = &linked_list_remove_value_at;
+
+	return list;
+}
+
+
 // error message
-void _exit_msg(const char* msg)
+void _linked_list_exit_msg(const char* msg)
 {
 	fprintf(stderr, "%s", msg);
 	fprintf(stderr, "%s", "\n");
 	exit(EXIT_FAILURE);
 }
 
-// initialize the list
-void _init_list(LinkedList *list, void* value)
-{
-	list->length = 1;
-	list->value_size = sizeof(value);
-	list->head = _new_node();
-	list->head->value = value;
-	list->head->next = NULL;
-	list->_initialized = true;
-	printf("List initialized\n");
-}
-
 // is an index valid ?
-bool _valid_index(LinkedList *list, int index)
+bool _linked_list_valid_index(linked_list *list, int index)
 {
 	return 0 <= index && index < list->length;
 }
 
 // assert that an index is valid
-void _assert_index(LinkedList *list, int index)
+void _linked_list_assert_index(linked_list *list, int index)
 {
-	if (_valid_index(list, index)) return;
+	if (_linked_list_valid_index(list, index)) return;
 	char msg[255];
 	sprintf(msg, LL_INDEX_ERROR_MSG, index, list->length);
-	_exit_msg(msg);
+	_linked_list_exit_msg(msg);
 }
 
 // get the value at the index
-Node* _get_node_at(LinkedList *list, int index)
+node* _linked_list_get_node_at(linked_list *list, int index)
 {
-	Node* node = list->head;
+	node* node = list->head;
 
 	for (int i = 0; i < index; i++)
 	{
@@ -51,7 +58,7 @@ Node* _get_node_at(LinkedList *list, int index)
 		{
 			char msg[255];
 			sprintf(msg, LL_NULL_POINTER_NODE, i);
-			_exit_msg(msg);
+			_linked_list_exit_msg(msg);
 		}
 	}
 
@@ -59,17 +66,17 @@ Node* _get_node_at(LinkedList *list, int index)
 }
 
 // create a new node
-Node* _new_node()
+node* _linked_list_new_node()
 {
 	// allocate new memory for node
-	size_t node_size = sizeof(struct Node);
-	struct Node *node = (struct Node*) malloc(node_size);
+	size_t node_size = sizeof(struct node);
+	struct node *node = (struct node*) malloc(node_size);
 	// if the pointer is NULL, the allocation faled
 	if (node == NULL)
 	{
 		char msg[255];
 		sprintf(msg, LL_MEM_ALLOC_ERROR_MSG, node_size);
-		_exit_msg(msg);
+		_linked_list_exit_msg(msg);
 	}
 	return node;
 }
@@ -78,27 +85,20 @@ Node* _new_node()
 /* 'Public' Methods */
 
 // get value at index
-void* get_value_at(LinkedList *list, int index)
+void* linked_list_get_value_at(linked_list *list, int index)
 {
-	_assert_index(list, index);
-	return _get_node_at(list, index)->value;
+	_linked_list_assert_index(list, index);
+	return _linked_list_get_node_at(list, index)->value;
 }
 
 // insert value at index
-void insert_value_at(LinkedList *list, int index, void* value)
+void linked_list_insert_value_at(linked_list *list, int index, void* value)
 {
 	// init list ?
 	if (index == 0)
 	{
-		// init list ?
-		if (!list->_initialized)
-		{
-			_init_list(list, value);
-			return;
-		}
-
 		// insert at head
-		Node* new_head = _new_node();
+		node* new_head = _linked_list_new_node();
 		new_head->value = value;
 		new_head->next = list->head;
 		list->head = new_head;
@@ -107,11 +107,11 @@ void insert_value_at(LinkedList *list, int index, void* value)
 	else
 	{
 		int new_index = index - 1;
-		_assert_index(list, new_index);
+		_linked_list_assert_index(list, new_index);
 		// get nodes
-		Node* prev_node = _get_node_at(list, new_index);
-		Node* after_node = prev_node->next;
-		Node* new_node = _new_node();
+		node* prev_node = _linked_list_get_node_at(list, new_index);
+		node* after_node = prev_node->next;
+		node* new_node = _linked_list_new_node();
 		new_node->value = value;
 		// set connections
 		prev_node->next = new_node;
@@ -122,43 +122,36 @@ void insert_value_at(LinkedList *list, int index, void* value)
 	list->length++;
 }
 
-// remove value at index
-void* remove_value_at(LinkedList *list, int index)
-{
-	_assert_index(list, index);
-}
-
-// remove value
-int remove_value(LinkedList *list, void* value)
-{
-	return 0;
-}
-
 // append value
-void append_value(LinkedList *list, void* value)
+void linked_list_append_value(linked_list *list, void* value)
 {
-	// init list ?
-	if (!list->_initialized)
-	{
-		_init_list(list, value);
-		return;
-	}
-
 	// add to empty list
 	if (list->length == 0)
 	{
-		list->head = _new_node();
+		list->head = _linked_list_new_node();
 		list->head->value = value;
 	}
 	// add to tail of the list
 	else
 	{
-		Node *tail = _get_node_at(list, list->length - 1);
-		tail->next = _new_node();
+		node *tail = _linked_list_get_node_at(list, list->length - 1);
+		tail->next = _linked_list_new_node();
 		tail->next->value = value;
 	}
 
 	// increment list length
 	list->length++;
+}
+
+// remove value at index
+void* linked_list_remove_value_at(linked_list *list, int index)
+{
+	_linked_list_assert_index(list, index);
+}
+
+// remove value
+int linked_list_remove_value(linked_list *list, void* value)
+{
+	return 0;
 }
 
