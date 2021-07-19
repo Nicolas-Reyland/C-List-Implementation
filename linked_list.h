@@ -36,7 +36,7 @@ struct linked_list
 	void (*insert_value_at)(linked_list*, int index, void* value);
 	void (*append_value)(linked_list*, void*);
 	void* (*remove_value_at)(linked_list*, int index);
-	int (*remove_value)(linked_list*, void* value);
+	int (*index_of)(linked_list*, void* value);
 };
 
 /* Init function */
@@ -49,7 +49,7 @@ void free_linked_list(linked_list* list);
 /* 'Private' Methods */
 
 // free node
-void _free_linked_list_node(ll_node* n);
+void _free_linked_list_node(ll_node* node);
 
 // error message
 void _linked_list_exit_msg(const char* msg);
@@ -82,4 +82,4 @@ void linked_list_append_value(linked_list *list, void* value);
 void* linked_list_remove_value_at(linked_list *list, int index);
 
 // remove value
-int linked_list_remove_value(linked_list *list, void* value);
+int linked_list_index_of(linked_list *list, void* value);

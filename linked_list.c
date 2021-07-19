@@ -15,8 +15,8 @@ linked_list* init_linked_list()
 	list->get_value_at = &linked_list_get_value_at;
 	list->insert_value_at = &linked_list_insert_value_at;
 	list->append_value = &linked_list_append_value;
-	list->remove_value = &linked_list_remove_value;
 	list->remove_value_at = &linked_list_remove_value_at;
+	list->index_of = &linked_list_index_of;
 
 	return list;
 }
@@ -29,10 +29,10 @@ void free_linked_list(linked_list* list)
 }
 
 // free node
-void _free_linked_list_node(ll_node* n)
+void _free_linked_list_node(ll_node* node)
 {
-	if (n->next != NULL) _free_linked_list_node(n->next);
-	free(n);
+	if (node->next != NULL) _free_linked_list_node(node->next);
+	free(node);
 }
 
 
@@ -161,12 +161,55 @@ void linked_list_append_value(linked_list *list, void* value)
 void* linked_list_remove_value_at(linked_list *list, int index)
 {
 	_linked_list_assert_index(list, index);
+
+	// remove the head
+	if (index == 0)
+	{
+		// there is only the head
+		if (list->length == 1)
+		{
+			free(list->head);
+			list->head = NULL;
+		}
+		// there are more
+		else
+		{
+			ll_node* old_head = list->head;
+			ll_node* new_head = old_head->next;
+			list->head = new_head;
+			free(old_head);
+			old_head = NULL;
+		}
+	}
+	// remove somewhere else
+	else
+	{
+		ll_node* previous_node = _linked_list_get_node_at(list, index - 1);
+		ll_node* current_node = previous_node->next;
+		ll_node* next_node = current_node->next;
+		previous_node->next = next_node;
+		free(current_node);
+		current_node = NULL;
+	}
+
+	// decrement the length
+	list->length--;
 }
 
-// remove value
-int linked_list_remove_value(linked_list *list, void* value)
+// index of value
+int linked_list_index_of(linked_list *list, void* value)
 {
-	ll_node* head = list->head;
-	//
+	ll_node* node = list->head;
+	int index = 0;
+	do
+	{
+		if (node->value == value) {
+			return index;
+		}
+		node = node->next;
+		index++;
+	} while (node != NULL);
+
+	return -1;
 }
 
