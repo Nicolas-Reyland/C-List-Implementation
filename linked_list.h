@@ -40,9 +40,16 @@ struct linked_list
 };
 
 /* Init function */
-linked_list init_linked_list();
+linked_list* init_linked_list();
+
+/* Free function */
+void free_linked_list(linked_list* list);
+
 
 /* 'Private' Methods */
+
+// free node
+void _free_linked_list_node(node* n);
 
 // error message
 void _linked_list_exit_msg(const char* msg);

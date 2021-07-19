@@ -4,21 +4,35 @@
 #include <errno.h>
 
 // init function
-linked_list init_linked_list()
+linked_list* init_linked_list()
 {
-	linked_list list;
+	linked_list* list = (linked_list*) malloc(sizeof(linked_list));
 	// setup attributes
-	list.length = 0;
-	list.value_size = sizeof(void*);
-	list.head = NULL;
+	list->length = 0;
+	list->value_size = sizeof(void*);
+	list->head = NULL;
 	// attach methods
-	list.get_value_at = &linked_list_get_value_at;
-	list.insert_value_at = &linked_list_insert_value_at;
-	list.append_value = &linked_list_append_value;
-	list.remove_value = &linked_list_remove_value;
-	list.remove_value_at = &linked_list_remove_value_at;
+	list->get_value_at = &linked_list_get_value_at;
+	list->insert_value_at = &linked_list_insert_value_at;
+	list->append_value = &linked_list_append_value;
+	list->remove_value = &linked_list_remove_value;
+	list->remove_value_at = &linked_list_remove_value_at;
 
 	return list;
+}
+
+/* Free function */
+void free_linked_list(linked_list* list)
+{
+	_free_linked_list_node(list->head);
+	free(list);
+}
+
+// free node
+void _free_linked_list_node(node* n)
+{
+	if (n->next != NULL) _free_linked_list_node(n->next);
+	free(n);
 }
 
 
