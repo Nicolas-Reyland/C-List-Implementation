@@ -12,12 +12,12 @@
 
 /* Structures */
 
-// node structure
-typedef struct node node;
-struct node
+// linked list node structure
+typedef struct ll_node ll_node;
+struct ll_node
 {
 	void* value;
-	struct node *next;
+	struct ll_node *next;
 };
 
 // Linked List structure
@@ -29,7 +29,7 @@ struct linked_list
 	// attributes
 	int length;
 	size_t value_size;
-	node *head;
+	ll_node *head;
 
 	// methods
 	void* (*get_value_at)(linked_list*, int index);
@@ -49,7 +49,7 @@ void free_linked_list(linked_list* list);
 /* 'Private' Methods */
 
 // free node
-void _free_linked_list_node(node* n);
+void _free_linked_list_node(ll_node* n);
 
 // error message
 void _linked_list_exit_msg(const char* msg);
@@ -61,10 +61,10 @@ bool _linked_list_valid_index(linked_list *list, int index);
 void _linked_list_assert_index(linked_list *list, int index);
 
 // get the node at the index
-node* _linked_list_get_node_at(linked_list *list, int index);
+ll_node* _linked_list_get_node_at(linked_list *list, int index);
 
 // create a new node
-node* _linked_list_new_node();
+ll_node* _linked_list_new_node();
 
 
 /* 'Public' Methods */

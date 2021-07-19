@@ -29,7 +29,7 @@ void free_linked_list(linked_list* list)
 }
 
 // free node
-void _free_linked_list_node(node* n)
+void _free_linked_list_node(ll_node* n)
 {
 	if (n->next != NULL) _free_linked_list_node(n->next);
 	free(n);
@@ -60,9 +60,9 @@ void _linked_list_assert_index(linked_list *list, int index)
 }
 
 // get the value at the index
-node* _linked_list_get_node_at(linked_list *list, int index)
+ll_node* _linked_list_get_node_at(linked_list *list, int index)
 {
-	node* node = list->head;
+	ll_node* node = list->head;
 
 	for (int i = 0; i < index; i++)
 	{
@@ -80,16 +80,16 @@ node* _linked_list_get_node_at(linked_list *list, int index)
 }
 
 // create a new node
-node* _linked_list_new_node()
+ll_node* _linked_list_new_node()
 {
 	// allocate new memory for node
-	size_t node_size = sizeof(struct node);
-	struct node *node = (struct node*) malloc(node_size);
+	size_t ll_node_size = sizeof(struct ll_node);
+	struct ll_node *node = (struct ll_node*) malloc(ll_node_size);
 	// if the pointer is NULL, the allocation faled
 	if (node == NULL)
 	{
 		char msg[255];
-		sprintf(msg, LL_MEM_ALLOC_ERROR_MSG, node_size);
+		sprintf(msg, LL_MEM_ALLOC_ERROR_MSG, ll_node_size);
 		_linked_list_exit_msg(msg);
 	}
 	return node;
@@ -112,7 +112,7 @@ void linked_list_insert_value_at(linked_list *list, int index, void* value)
 	if (index == 0)
 	{
 		// insert at head
-		node* new_head = _linked_list_new_node();
+		ll_node* new_head = _linked_list_new_node();
 		new_head->value = value;
 		new_head->next = list->head;
 		list->head = new_head;
@@ -123,9 +123,9 @@ void linked_list_insert_value_at(linked_list *list, int index, void* value)
 		int new_index = index - 1;
 		_linked_list_assert_index(list, new_index);
 		// get nodes
-		node* prev_node = _linked_list_get_node_at(list, new_index);
-		node* after_node = prev_node->next;
-		node* new_node = _linked_list_new_node();
+		ll_node* prev_node = _linked_list_get_node_at(list, new_index);
+		ll_node* after_node = prev_node->next;
+		ll_node* new_node = _linked_list_new_node();
 		new_node->value = value;
 		// set connections
 		prev_node->next = new_node;
@@ -148,7 +148,7 @@ void linked_list_append_value(linked_list *list, void* value)
 	// add to tail of the list
 	else
 	{
-		node *tail = _linked_list_get_node_at(list, list->length - 1);
+		ll_node *tail = _linked_list_get_node_at(list, list->length - 1);
 		tail->next = _linked_list_new_node();
 		tail->next->value = value;
 	}
@@ -166,6 +166,7 @@ void* linked_list_remove_value_at(linked_list *list, int index)
 // remove value
 int linked_list_remove_value(linked_list *list, void* value)
 {
-	return 0;
+	ll_node* head = list->head;
+	//
 }
 
